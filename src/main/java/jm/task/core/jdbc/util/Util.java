@@ -16,13 +16,18 @@ public class Util {
     private static final String DB_PASSWORD ="Moscowneversleep2020";
 
     private static final SessionFactory sessionFactory = BuildSessionFactory();
+    private static final Connection SQLConnection = getDBSQLConnection();
+
+    public static Connection getSQLConnection() {
+        return SQLConnection;
+    }
 
     // Connect to MySQL
-    public static Connection getMySQLConnection() {
+    private static Connection getDBSQLConnection() {
         return getMySQLConnection(DB_HOSTNAME, DB_DBNAME, DB_USERNAME, DB_PASSWORD);
     }
 
-    public static Connection getMySQLConnection(String hostName, String dbName,
+    private static Connection getMySQLConnection(String hostName, String dbName,
                                                 String userName, String password) {
         Connection connection = null;
         String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName+
@@ -40,12 +45,12 @@ public class Util {
         return connection;
     }
 
-    public static SessionFactory BuildSessionFactory() {
+    private static SessionFactory BuildSessionFactory() {
         SessionFactory sessionFactory = null;
             try {
                 Configuration configuration = new Configuration()
                 .setProperty("connection.driver_class","com.mysql.jdbc.Driver")
-                .setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/userDB?serverTimezone=UTC&useSSL=false")
+                .setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/userDB?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false")
                 .setProperty("hibernate.connection.username", "root")
                 .setProperty("hibernate.connection.password", "Moscowneversleep2020")
                 .addAnnotatedClass(User.class);
@@ -64,6 +69,15 @@ public class Util {
     }
 
     public static void shutdown() {
-        getSessionFactory().close();
+        if (getSessionFactory() != null) {
+            getSessionFactory().close();
+        }
+        if (getDBSQLConnection() != null) {
+            try {
+                getDBSQLConnection().close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
