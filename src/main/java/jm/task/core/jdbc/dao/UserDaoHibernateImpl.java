@@ -23,7 +23,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             session.createSQLQuery("create table IF NOT EXISTS userTable(id BIGINT primary key auto_increment, name varchar(100), lastname varchar(100), age tinyint);").executeUpdate();
             tx1.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             tx1.rollback();
         } finally {
             session.close();
@@ -37,7 +37,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             session.createSQLQuery("drop table IF EXISTS userTable;").executeUpdate();
             tx1.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             tx1.rollback();
         } finally {
             session.close();
@@ -55,7 +55,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             session.save(user);
             tx1.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             tx1.rollback();
         } finally {
             session.close();
@@ -70,7 +70,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             session.delete(user);
             tx1.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             tx1.rollback();
         } finally {
             session.close();
@@ -92,7 +92,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             session.createSQLQuery("TRUNCATE TABLE userTable;").executeUpdate();
             tx1.commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             tx1.rollback();
         } finally {
             session.close();
